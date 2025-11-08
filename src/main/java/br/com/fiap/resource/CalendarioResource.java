@@ -59,16 +59,15 @@ public class CalendarioResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@Valid CalendarioTO calendario, @PathParam("id") Long id) {
-        calendario.setId(id);
-        CalendarioTO resultado = calendarioBO.update(calendario);
-        Response.ResponseBuilder response = null;
+    public Response update(@PathParam("id") Long id, @Valid CalendarioTO calendarioAtualizado){
+
+        calendarioAtualizado.setId(id);
+        CalendarioTO resultado = calendarioBO.update(calendarioAtualizado);
+
         if (resultado != null){
-            response = Response.ok(null); // 201 - CREATED
+            return Response.ok(resultado).build();
         } else {
-            response = Response.status(400); // 400 - BAD REQUEST
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        response.entity(resultado);
-        return response.build();
     }
 }
