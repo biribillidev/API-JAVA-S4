@@ -68,23 +68,25 @@ public class CalendarioDAO {
     }
 
     public CalendarioTO update (CalendarioTO calendario) {
-        String sql = "update hcf_calendario set data_consulta=?, hora_consulta =?, especialidade = ?, local =? ";
+        String sql = "update hcf_calendario set data_consulta=?, hora_consulta =?, especialidade = ?, local =? where id = ? ";
         try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sql))
         {
             ps.setDate(1, Date.valueOf(calendario.getData_consulta()));
             ps.setString(2, calendario.getHora_consulta());
             ps.setString(3, calendario.getEspecialidade() );
             ps.setString(4, calendario.getLocal());
+            ps.setLong(5, calendario.getId());
+
             if (ps.executeUpdate() > 0){
-                return null;
+                return calendario;
             } else {
                 return null;
             }
         } catch (SQLException e){
             System.out.println("Erro ao atualizar: " + e.getMessage());
+            return null;
         } finally {
             ConnectionFactory.closeConnection();
         }
-        return null;
     }
 }
